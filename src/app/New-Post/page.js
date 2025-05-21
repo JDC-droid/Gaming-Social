@@ -1,11 +1,16 @@
 "use client";
 import { useState } from "react";
 import React from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const page = () => {
   const [postObject, setPostObject] = useState({
+    username: "",
     title: "",
     description: "",
+    likes: 0,
   });
 
   const handleInputChange = (e) => {
@@ -28,7 +33,7 @@ const page = () => {
     e.preventDefault();
     console.log("Post Object: ", postObject);
     const localStoragePosts = localStorage.getItem("posts");
-    if (!postObject.title || !postObject.description) {
+    if (!postObject.title || !postObject.description || !postObject.username) {
       alert("Please fill out your post!");
       return;
     }
@@ -46,6 +51,15 @@ const page = () => {
     } else {
       localStorage.setItem("posts", JSON.stringify([postId]));
     }
+
+    toast.success("Post added successfully!");
+
+    setPostObject({
+      username: "",
+      title: "",
+      description: "",
+      likes: 0,
+    });
   };
 
   return (
@@ -57,11 +71,22 @@ const page = () => {
         <form onSubmit={handleSubmit}>
           <div className="pt-6">
             <div>
+              <label className=" pr-4 text-gray-300">Username</label>
+              <input
+                className=" bg-[#b9a7bb] rounded-md border-2 border-[#323b36]"
+                placeholder="Swisscheese1115"
+                name="username"
+                value={postObject.username}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
               <label className=" pr-4 text-gray-300">Post Title:</label>
               <input
                 className=" bg-[#b9a7bb] rounded-md border-2 border-[#323b36]"
                 placeholder="1v4 Clutch!!"
                 name="title"
+                value={postObject.title}
                 onChange={handleInputChange}
               />
             </div>
@@ -71,6 +96,7 @@ const page = () => {
                 className=" bg-[#b9a7bb] rounded-md border-2 border-[#323b36]"
                 placeholder="I can't believe I did that!"
                 name="description"
+                value={postObject.description}
                 onChange={handleInputChange}
               />
             </div>
@@ -85,6 +111,7 @@ const page = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
